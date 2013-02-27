@@ -1,7 +1,7 @@
 
 
-var range_rec = 512;  // KBps
-var range_snd = 512;  // KBps
+var range_rec = 25;  // MBps
+var range_snd = 25;  // MBps
 
 if(typeof(EventSource) !== "undefined") 
 {
@@ -20,8 +20,8 @@ if(typeof(EventSource) !== "undefined")
 			var bytes_rec = new_rec - old_rec;
 			var bytes_snd = new_snd - old_snd;
 
-			rate_rec = bytes_rec / seconds / 1024;
-			rate_snd = bytes_snd / seconds / 1024;
+			rate_rec = bytes_rec / seconds / 1024 / 1024;
+			rate_snd = bytes_snd / seconds / 1024 / 1024;
 
 			// Check over/under flow
 			if ( rate_rec > range_rec  || rate_rec < 0 )
@@ -34,16 +34,15 @@ if(typeof(EventSource) !== "undefined")
 			else
 				old_rate_snd = rate_snd;
 
-			document.getElementById("rec_result").innerHTML="Receive: " + Math.round(rate_rec*100)/100 + " KBps";
-			document.getElementById("snd_result").innerHTML="Send: "    + Math.round(rate_snd*100)/100 + " KBps";
+			document.getElementById("rec_result").innerHTML="Receive: " + Math.round(rate_rec*10000)/10000 + " MBps";
+			document.getElementById("snd_result").innerHTML="Send: "    + Math.round(rate_snd*10000)/10000 + " MBps";
 		}
 		old_rec = new_rec;
 		old_snd = new_snd;
 	};
 	
 } else {
-	document.getElementById("rec_result").innerHTML=
-		"Sorry, your browser does not support server-sent events...";
+	document.getElementById("rec_result").innerHTML = "Sorry, your browser does not support server-sent events...";
 }
 
 
@@ -55,7 +54,7 @@ window.onload = function() {
         'interval': 1000,
         'strokeStyle': "#819C58",
         'fillStyle': "rgba(64,128,0,0.25)",
-		'grid': [32,32],
+		'grid':  [1,1],
 		'range': [0,range_rec],
 
         'call': function(){return (Math.round(rate_rec));}
@@ -67,7 +66,7 @@ window.onload = function() {
         'interval': 1000,
         'strokeStyle': "#58819C",
         'fillStyle': "rgba(0,88,145,0.25)",
-		'grid': [32,32],
+		'grid':  [1,1],
 		'range': [0,range_snd],
 
         'call': function(){return (Math.round(rate_snd));}
